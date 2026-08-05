@@ -13,6 +13,8 @@ import {
 import { validateTikTokUrl } from "../lib/validation";
 import { resolveVideo } from "../services/resolver";
 import type { DownloadStatus, MediaFormat, VideoData } from "../types/video";
+import type { SlideshowImage } from "../types/video";
+import { createSlideshowZip } from "../lib/slideshow-download";
 import { ResultCard } from "./ResultCard";
 
 function getErrorMessage(code: string) {
@@ -103,6 +105,45 @@ export function Downloader() {
     }
   }
 
+  function saveBlob(blob: Blob, filename: string) {
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = objectUrl;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1_000);
+  }
+
+  async function downloadImage(image: SlideshowImage) {
+    setMessage("");
+    try {
+      const response = await fetch(image.url);
+      if (!response.ok) throw new Error("IMAGE_DOWNLOAD_FAILED");
+      const blob = await response.blob();
+      const extension = blob.type.includes("png") ? "png" : blob.type.includes("webp") ? "webp" : "jpg";
+      saveBlob(blob, `vidrop-${data?.id ?? "tiktok"}-${String(image.index).padStart(2, "0")}.${extension}`);
+      setMessage("Your image download has started.");
+    } catch {
+      setMessage("The direct download was blocked. The image has been opened in a new tab instead.");
+      window.open(image.url, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  async function downloadSlideshow(onProgress: (completed: number, total: number) => void) {
+    if (!data?.images.length) return;
+    setMessage("");
+    try {
+      const zip = await createSlideshowZip(data.images, data.id, onProgress);
+      saveBlob(zip, `vidrop-${data.id}.zip`);
+      setMessage("Your slideshow ZIP download has started.");
+    } catch {
+      setMessage("Some slideshow images could not be downloaded. Please resolve the link again and retry.");
+      throw new Error("SLIDESHOW_DOWNLOAD_FAILED");
+    }
+  }
+
   return (
     <>
       <motion.section
@@ -155,7 +196,7 @@ export function Downloader() {
       <AnimatePresence mode="wait">
         {status === "loading" && <LoadingCard key="loading" />}
         {status === "success" && data && (
-          <ResultCard key="result" data={data} onDownload={startDownload} onReset={reset} notice={message} />
+          <ResultCard key="result" data={data} onDownload={startDownload} onImageDownload={downloadImage} onSlideshowDownload={downloadSlideshow} onReset={reset} notice={message} />
         )}
         {status === "error" && (
           <motion.section id="result" className="error-card" key="error" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
