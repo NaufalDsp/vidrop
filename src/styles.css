@@ -32,9 +32,9 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .navbar-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: inline-flex; align-items: center; }
 .brand-logo { display: block; width: auto; height: 46px; }
-nav { display: flex; align-items: center; gap: 30px; font-size: 14px; font-weight: 600; color: #55564f; }
-nav a { transition: color .2s ease; }
-nav a:hover { color: var(--ink); }
+.navbar nav { display: flex; align-items: center; gap: 30px; font-size: 14px; font-weight: 600; color: #55564f; }
+.navbar nav a { transition: color .2s ease; }
+.navbar nav a:hover { color: var(--ink); }
 .github-link { display: inline-flex; align-items: center; gap: 7px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
 
 .hero-wrap { position: relative; }
@@ -144,15 +144,19 @@ h1, h2, h3 { font-family: "Manrope", sans-serif; }
 .faq-item > button svg { flex: 0 0 auto; transition: transform .25s; }.faq-item.open > button svg { transform: rotate(180deg); }
 .faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .28s ease; }.faq-answer > p { min-height: 0; overflow: hidden; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }.faq-item.open .faq-answer { grid-template-rows: 1fr; }.faq-item.open .faq-answer > p { padding: 0 36px 22px 3px; }
 
-footer { margin-top: 10px; padding: 60px 0 24px; color: #f4f4ef; background: #1c1c19; }
-.footer-top { display: flex; justify-content: space-between; padding-bottom: 55px; }.footer-top .brand { padding: 4px 10px; border-radius: 10px; background: #fff; }.footer-top .brand-logo { height: 40px; }.footer-top > div > p { margin: 16px 0 0; color: #8f9088; font-size: 14px; }
-.footer-links { display: flex; align-items: flex-start; gap: 30px; color: #b9bab2; font-size: 14px; }.footer-links a { display: inline-flex; align-items: center; gap: 6px; }
-.footer-bottom { padding-top: 23px; border-top: 1px solid #33332f; display: flex; justify-content: space-between; gap: 24px; color: #7f8078; font-size: 12px; }
+footer { width: 100%; margin-top: 10px; padding: 64px 0 26px; color: #f4f4ef; background: #1c1c19; }
+.footer-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; padding-bottom: 52px; }
+.footer-wordmark { display: inline-block; color: #f5f5f0; font: 800 24px/1 "Manrope", sans-serif; letter-spacing: -.8px; }
+.footer-intro > p { margin: 13px 0 0; color: #92938b; font-size: 14px; }
+.footer-links { display: flex; align-items: center; gap: 30px; color: #b9bab2; font-size: 14px; }
+.footer-links a { display: inline-flex; align-items: center; gap: 6px; transition: color .2s ease; }
+.footer-links a:hover { color: #fff; }
+.footer-bottom { padding-top: 23px; border-top: 1px solid #353530; display: flex; justify-content: space-between; gap: 24px; color: #85867e; font-size: 12px; }
 .footer-bottom p { margin: 0; }
 
 @media (max-width: 800px) {
   .container { width: min(calc(100% - 32px), 680px); max-width: calc(100vw - 32px); }
-  nav > a:not(.github-link) { display: none; }
+  .navbar nav > a:not(.github-link) { display: none; }
   .hero { padding: 72px 0 90px; }.hero h1 { letter-spacing: -.06em; }.hero-copy { font-size: 16px; }
   .result-card { margin-top: -30px; grid-template-columns: 1fr; width: min(560px,100%); }.video-preview { min-height: 520px; max-height: 640px; }.result-content { padding: 29px 24px 22px; }
   .loading-card { min-height: 0; }.preview-skeleton { min-height: 380px; }
@@ -171,7 +175,7 @@ footer { margin-top: 10px; padding: 60px 0 24px; color: #f4f4ef; background: #1c
   .error-card { padding: 34px 21px; margin-bottom: 80px; }.error-actions { flex-direction: column; }
   .content-section { padding: 82px 0; }.steps-grid, .features-grid { margin-top: 45px; }.features-grid { grid-template-columns: 1fr; }.feature, .feature:nth-child(2), .feature:nth-child(n+3) { min-height: 0; padding: 26px; border-right: 0; border-bottom: 1px solid var(--line); }.feature:last-child { border-bottom: 0; }.feature h3 { margin-top: 25px; }
   .faq-item > button { font-size: 14px; }
-  .footer-top, .footer-bottom { flex-direction: column; }.footer-links { flex-wrap: wrap; gap: 20px; }.footer-bottom { line-height: 1.6; }
+  footer { padding-top: 50px; }.footer-top, .footer-bottom { align-items: flex-start; flex-direction: column; }.footer-top { gap: 32px; padding-bottom: 38px; }.footer-links { flex-wrap: wrap; gap: 20px; }.footer-bottom { line-height: 1.6; }
 }
 
 @media (prefers-reduced-motion: reduce) {

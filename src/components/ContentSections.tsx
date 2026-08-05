@@ -10,7 +10,6 @@ import {
   Smartphone,
   UserRoundX,
 } from "lucide-react";
-import { Brand } from "./Brand";
 
 const steps = [
   { icon: Link2, number: "01", title: "Paste the link", copy: "Copy the TikTok video URL and drop it into Vidrop." },
@@ -70,10 +69,28 @@ export function ContentSections() {
         </div>
       </section>
 
-      <footer>
-        <div className="container footer-top"><div><Brand /><p>Save the videos worth keeping.</p></div><div className="footer-links"><a href="#how-it-works">How it works</a><a href="#faq">FAQ</a><a href="https://github.com/NaufalDsp/vidrop" target="_blank" rel="noreferrer"><Code2 size={15} /> GitHub</a></div></div>
-        <div className="container footer-bottom"><p>Only download content you own or have permission to use.</p><p>Built with React + TypeScript · © 2026 Vidrop</p></div>
-      </footer>
     </>
+  );
+}
+
+export function Footer() {
+  return (
+    <footer>
+      <div className="container footer-top">
+        <div className="footer-intro">
+          <a className="footer-wordmark" href="#top">Vidrop</a>
+          <p>Save the videos worth keeping.</p>
+        </div>
+        <nav className="footer-links" aria-label="Footer navigation">
+          <a href="#how-it-works">How it works</a>
+          <a href="#faq">FAQ</a>
+          <a href="https://github.com/NaufalDsp/vidrop" target="_blank" rel="noreferrer"><Code2 size={15} /> GitHub</a>
+        </nav>
+      </div>
+      <div className="container footer-bottom">
+        <p>Only download content you own or have permission to use.</p>
+        <p>naufaldsp · © 2026 Vidrop</p>
+      </div>
+    </footer>
   );
 }

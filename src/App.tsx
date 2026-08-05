@@ -1,4 +1,4 @@
-import { ContentSections } from "./components/ContentSections";
+import { ContentSections, Footer } from "./components/ContentSections";
 import { Downloader } from "./components/Downloader";
 import { Navbar } from "./components/Navbar";
 
@@ -13,6 +13,7 @@ export default function App() {
         <div className="container">
           <ContentSections />
         </div>
+        <Footer />
       </main>
     </div>
   );
