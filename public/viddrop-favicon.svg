@@ -1,0 +1,80 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dropGradient" x1="256" y1="72" x2="256" y2="442" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22E6E6"/>
+      <stop offset="45%" stop-color="#13B7DE"/>
+      <stop offset="100%" stop-color="#1554C8"/>
+    </linearGradient>
+
+    <linearGradient id="waveGradient" x1="145" y1="275" x2="366" y2="375" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0E91CF"/>
+      <stop offset="100%" stop-color="#0E55B5"/>
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M256 56
+       C237 56 222 70 204 91
+       C164 139 115 200 96 250
+       C72 314 83 372 118 415
+       C153 458 203 481 256 492
+       C309 481 359 458 394 415
+       C429 372 440 314 416 250
+       C397 200 348 139 308 91
+       C290 70 275 56 256 56Z"
+    fill="url(#dropGradient)"
+  />
+
+  <path
+    d="M96 337
+       C139 317 176 290 214 269
+       C253 247 303 232 360 213
+       C391 202 409 183 417 163
+       C426 211 428 260 410 303
+       C386 360 336 394 256 422
+       C181 396 126 371 96 337Z"
+    fill="url(#waveGradient)"
+    opacity="0.72"
+  />
+
+  <path
+    d="M207 170
+       C207 155 223 146 236 153
+       L323 202
+       C336 209 336 228 323 235
+       L236 284
+       C223 291 207 282 207 267
+       V170Z"
+    fill="white"
+  />
+
+  <rect x="241" y="283" width="30" height="68" rx="15" fill="white"/>
+
+  <path
+    d="M205 342
+       C196 342 192 353 198 359
+       L246 408
+       C252 414 260 414 266 408
+       L314 359
+       C320 353 316 342 307 342
+       H284
+       V326
+       H228
+       V342
+       H205Z"
+    fill="white"
+  />
+
+  <path
+    d="M185 391
+       V405
+       C185 423 199 437 217 437
+       H295
+       C313 437 327 423 327 405
+       V391"
+    stroke="white"
+    stroke-width="18"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
