@@ -17,7 +17,9 @@ type Props = {
 
 export function ResultCard({ data, notice, onDownload, onImageDownload, onSlideshowDownload, onReset }: Props) {
   const videoFormats = useMemo(() => data.formats.filter((item) => item.type === "video"), [data.formats]);
-  const isSlideshow = data.mediaType === "slideshow" && data.images.length > 0;
+  const isPhotoPost = data.mediaType === "photo" && data.images.length === 1;
+  const isSlideshow = data.mediaType === "slideshow" && data.images.length > 1;
+  const isImagePost = isPhotoPost || isSlideshow;
   const [selectedId, setSelectedId] = useState(videoFormats[0]?.id ?? "");
   const [mode, setMode] = useState<"video" | "audio">("video");
   const [slideIndex, setSlideIndex] = useState(0);
@@ -49,14 +51,12 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
 
   return (
     <motion.section id="result" className="result-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-      <div className={`video-preview ${isSlideshow ? "slideshow-preview" : ""}`}>
-        {isSlideshow ? (
+      <div className={`video-preview ${isImagePost ? "slideshow-preview" : ""}`}>
+        {isImagePost ? (
           <>
-            <img src={currentImage.url} alt={`Slide ${currentImage.index} of ${data.images.length} from ${data.title}`} />
-            <button type="button" className="slide-control previous" onClick={() => moveSlide(-1)} aria-label="Previous image"><ChevronLeft size={22} /></button>
-            <button type="button" className="slide-control next" onClick={() => moveSlide(1)} aria-label="Next image"><ChevronRight size={22} /></button>
-            <span className="slide-counter"><Images size={13} /> {currentImage.index} / {data.images.length}</span>
-            <span className="preview-label">Photo slideshow</span>
+            <img src={currentImage.url} alt={isPhotoPost ? `Photo from ${data.title}` : `Slide ${currentImage.index} of ${data.images.length} from ${data.title}`} />
+            {isSlideshow && <><button type="button" className="slide-control previous" onClick={() => moveSlide(-1)} aria-label="Previous image"><ChevronLeft size={22} /></button><button type="button" className="slide-control next" onClick={() => moveSlide(1)} aria-label="Next image"><ChevronRight size={22} /></button><span className="slide-counter"><Images size={13} /> {currentImage.index} / {data.images.length}</span></>}
+            <span className="preview-label">{isPhotoPost ? "Photo post" : "Photo slideshow"}</span>
           </>
         ) : (
           <>
@@ -71,23 +71,25 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
       <div className="result-content">
         <div className="creator-row">
           <div><span className="display-name">{data.author.displayName}</span><span className="username">@{data.author.username}</span></div>
-          <span className="clean-badge"><ShieldCheck size={14} /> {isSlideshow ? `${data.images.length} photos` : "No watermark"}</span>
+          <span className="clean-badge"><ShieldCheck size={14} /> {isPhotoPost ? "1 photo" : isSlideshow ? `${data.images.length} photos` : "No watermark"}</span>
         </div>
         <p className="caption">{data.title}</p>
 
-        {isSlideshow ? (
+        {isImagePost ? (
           <div className="slideshow-actions">
             <button className="secondary-download-button" type="button" disabled={downloadMode !== "idle"} onClick={() => void runSingleImageDownload()}>
               {downloadMode === "single" ? <LoaderCircle className="spin" size={18} /> : <Download size={18} />}
               {downloadMode === "single" ? "Preparing image..." : `Download image ${currentImage.index}`}
             </button>
-            <button className="primary-button download-button" type="button" disabled={downloadMode !== "idle"} onClick={() => void runSlideshowDownload()}>
-              {downloadMode === "all" ? <LoaderCircle className="spin" size={19} /> : <Images size={19} />}
-              {downloadMode === "all" ? `Preparing ${progress.completed} of ${progress.total}...` : "Download all images (.zip)"}
-            </button>
+            {isSlideshow && (
+              <button className="primary-button download-button" type="button" disabled={downloadMode !== "idle"} onClick={() => void runSlideshowDownload()}>
+                {downloadMode === "all" ? <LoaderCircle className="spin" size={19} /> : <Images size={19} />}
+                {downloadMode === "all" ? `Preparing ${progress.completed} of ${progress.total}...` : "Download all images (.zip)"}
+              </button>
+            )}
             {data.audio?.available && (
               <button className="audio-download-button" type="button" disabled={downloadMode !== "idle"} onClick={() => data.audio?.url && void onDownload({ id: "audio", type: "audio", format: "mp3", quality: "Audio", url: data.audio.url })}>
-                <Music2 size={16} /> Download slideshow audio
+                <Music2 size={16} /> Download {isPhotoPost ? "photo" : "slideshow"} audio
               </button>
             )}
           </div>

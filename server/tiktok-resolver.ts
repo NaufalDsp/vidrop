@@ -26,7 +26,7 @@ export type ResolvedImage = {
 
 export type ResolvedVideo = {
   id: string;
-  mediaType: "video" | "slideshow";
+  mediaType: "video" | "photo" | "slideshow";
   title: string;
   author: { username: string; displayName?: string };
   thumbnail?: string;
@@ -150,8 +150,8 @@ export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedVideo {
 
   return {
     id,
-    mediaType: images.length > 0 ? "slideshow" : "video",
-    title: asNonEmptyString(payload.data.title) ?? (images.length > 0 ? "TikTok slideshow" : "TikTok video"),
+    mediaType: images.length === 1 ? "photo" : images.length > 1 ? "slideshow" : "video",
+    title: asNonEmptyString(payload.data.title) ?? (images.length === 1 ? "TikTok photo" : images.length > 1 ? "TikTok slideshow" : "TikTok video"),
     author: {
       username: asNonEmptyString(payload.data.author?.unique_id) ?? "tiktok",
       displayName: asNonEmptyString(payload.data.author?.nickname),

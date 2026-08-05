@@ -15,7 +15,7 @@ export type SlideshowImage = {
 
 export type VideoData = {
   id: string;
-  mediaType: "video" | "slideshow";
+  mediaType: "video" | "photo" | "slideshow";
   title: string;
   author: { username: string; displayName?: string };
   thumbnail?: string;
