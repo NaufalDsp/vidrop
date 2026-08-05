@@ -12,9 +12,9 @@ import {
 } from "lucide-react";
 
 const steps = [
-  { icon: Link2, number: "01", title: "Paste the link", copy: "Copy a public TikTok or Instagram link and drop it into Vidrop." },
-  { icon: SlidersHorizontal, number: "02", title: "Choose media", copy: "Pick an available video quality, photo, or carousel item." },
-  { icon: Download, number: "03", title: "Download", copy: "Save video, audio, photos, or a complete carousel to your device." },
+  { icon: Link2, number: "01", title: "Paste the link", copy: "Copy a public TikTok post link and drop it into Vidrop." },
+  { icon: SlidersHorizontal, number: "02", title: "Choose media", copy: "Pick an available video quality, photo, or slideshow item." },
+  { icon: Download, number: "03", title: "Download", copy: "Save video, audio, photos, or a complete slideshow to your device." },
 ];
 
 const features = [
@@ -25,7 +25,7 @@ const features = [
 ];
 
 const faqs = [
-  ["Which platforms does Vidrop support?", "Vidrop supports public TikTok posts and public Instagram posts, Reels, photos, and carousels."],
+  ["Which TikTok posts does Vidrop support?", "Vidrop supports public TikTok videos, single-photo posts, and photo slideshows."],
   ["Can I download without a watermark?", "Vidrop prioritizes clean or original sources whenever one is available."],
   ["Can I download audio separately?", "Yes, when the platform returns a separate audio source. Select Audio MP3 in the result panel."],
   ["Why isn't a certain resolution available?", "Vidrop only displays qualities returned by the source, so it never promises a resolution that does not exist."],

@@ -1,5 +1,5 @@
-export type Platform = "tiktok" | "instagram";
-export type MediaType = "video" | "photo" | "slideshow" | "carousel";
+export type Platform = "tiktok";
+export type MediaType = "video" | "photo" | "slideshow";
 
 export type MediaFormat = {
   id: string;

@@ -3,6 +3,13 @@ import { ResolverError } from "./resolver-error.js";
 
 const TIKWM_API_URL = "https://www.tikwm.com/api/";
 const REQUEST_TIMEOUT_MS = 15_000;
+const TIKTOK_HOSTS = new Set([
+  "tiktok.com",
+  "www.tiktok.com",
+  "m.tiktok.com",
+  "vm.tiktok.com",
+  "vt.tiktok.com",
+]);
 
 type TikwmAuthor = {
   unique_id?: unknown;
@@ -42,6 +49,29 @@ function asSafeMediaUrl(value: unknown): string | undefined {
   } catch {
     return undefined;
   }
+}
+
+export function parseTikTokUrl(value: unknown): string {
+  if (typeof value !== "string" || value.length > 2_048) {
+    throw new ResolverError("INVALID_URL", "Enter a valid TikTok URL.", 400);
+  }
+
+  let parsed: URL;
+  try {
+    parsed = new URL(value.trim());
+  } catch {
+    throw new ResolverError("INVALID_URL", "Enter a complete TikTok URL.", 400);
+  }
+
+  if (parsed.protocol !== "https:") {
+    throw new ResolverError("UNSUPPORTED_URL", "Only secure TikTok links are supported.", 400);
+  }
+  if (!TIKTOK_HOSTS.has(parsed.hostname.toLowerCase())) {
+    throw new ResolverError("UNSUPPORTED_PLATFORM", "Vidrop only supports TikTok links.", 400);
+  }
+
+  parsed.hash = "";
+  return parsed.toString();
 }
 
 export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedMedia {

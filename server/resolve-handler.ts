@@ -1,5 +1,5 @@
-import { parseMediaUrl, resolveMedia } from "./media-resolver.js";
 import { ResolverError } from "./resolver-error.js";
+import { parseTikTokUrl, resolveTikTokMedia } from "./tiktok-resolver.js";
 
 const jsonHeaders = {
   "Cache-Control": "no-store",
@@ -23,8 +23,8 @@ export async function handleResolveRequest(request: Request): Promise<Response> 
 
   try {
     const body = (await request.json()) as { url?: unknown };
-    const { url, platform } = parseMediaUrl(body.url);
-    const data = await resolveMedia(url, platform);
+    const url = parseTikTokUrl(body.url);
+    const data = await resolveTikTokMedia(url);
     return json({ success: true, data });
   } catch (error) {
     if (error instanceof ResolverError) {

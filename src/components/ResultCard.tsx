@@ -19,8 +19,7 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
   const videoFormats = useMemo(() => data.formats.filter((item) => item.type === "video"), [data.formats]);
   const isPhotoPost = data.mediaType === "photo" && data.images.length === 1;
   const isSlideshow = data.mediaType === "slideshow" && data.images.length > 1;
-  const isCarousel = data.mediaType === "carousel" && data.items.length > 1;
-  const isCollection = isSlideshow || isCarousel;
+  const isCollection = isSlideshow;
   const isImagePost = isPhotoPost || isCollection;
   const [selectedId, setSelectedId] = useState(videoFormats[0]?.id ?? "");
   const [mode, setMode] = useState<"video" | "audio">("video");
@@ -58,7 +57,7 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
           <>
             {currentItem.type === "video" ? <video src={currentItem.url} poster={currentItem.thumbnail} controls playsInline /> : <img src={currentItem.url} alt={isPhotoPost ? `Photo from ${data.title}` : `Item ${currentItem.index} of ${data.items.length} from ${data.title}`} />}
             {isCollection && <><button type="button" className="slide-control previous" onClick={() => moveSlide(-1)} aria-label="Previous item"><ChevronLeft size={22} /></button><button type="button" className="slide-control next" onClick={() => moveSlide(1)} aria-label="Next item"><ChevronRight size={22} /></button><span className="slide-counter"><Images size={13} /> {currentItem.index} / {data.items.length}</span></>}
-            <span className="preview-label">{isPhotoPost ? "Photo post" : isCarousel ? "Instagram carousel" : "Photo slideshow"}</span>
+            <span className="preview-label">{isPhotoPost ? "Photo post" : "Photo slideshow"}</span>
           </>
         ) : (
           <>
@@ -71,7 +70,7 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
 
       <div className="result-content">
         <div className="creator-row">
-          <div><span className="platform-name">{data.platform === "instagram" ? "Instagram" : "TikTok"}</span><span className="display-name">{data.author.displayName}</span><span className="username">@{data.author.username}</span></div>
+          <div><span className="display-name">{data.author.displayName}</span><span className="username">@{data.author.username}</span></div>
           <span className="clean-badge"><ShieldCheck size={14} /> {isPhotoPost ? "1 photo" : isCollection ? `${data.items.length} items` : "No watermark"}</span>
         </div>
         <p className="caption">{data.title}</p>

@@ -7,22 +7,18 @@ const tiktokHosts = new Set([
   "vm.tiktok.com",
   "vt.tiktok.com",
 ]);
-const instagramHosts = new Set(["instagram.com", "www.instagram.com", "m.instagram.com"]);
-
 export const mediaUrlSchema = z
   .string()
   .trim()
-  .url("Enter a complete TikTok or Instagram URL.")
+  .url("Enter a complete TikTok URL.")
   .refine((value) => {
     try {
       const parsed = new URL(value);
-      const host = parsed.hostname.toLowerCase();
-      if (tiktokHosts.has(host)) return true;
-      return instagramHosts.has(host) && /^\/(?:p|reel|reels|tv)\/[^/]+/i.test(parsed.pathname);
+      return parsed.protocol === "https:" && tiktokHosts.has(parsed.hostname.toLowerCase());
     } catch {
       return false;
     }
-  }, "Use a public TikTok post or Instagram post/Reel link.");
+  }, "Use a public TikTok post link.");
 
 export function validateMediaUrl(value: string) {
   return mediaUrlSchema.safeParse(value);

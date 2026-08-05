@@ -25,10 +25,8 @@ function getErrorMessage(code: string) {
     REQUEST_TIMEOUT: "The resolver took too long. Please try again.",
     MEDIA_NOT_FOUND: "We couldn't find that public post.",
     MEDIA_NOT_AVAILABLE: "No downloadable media is available for this post.",
-    UNSUPPORTED_URL: "Use a public TikTok post or Instagram post/Reel link.",
-    UNSUPPORTED_PLATFORM: "Vidrop currently supports TikTok and Instagram.",
-    RESOLVER_PROVIDER_NOT_CONFIGURED: "Instagram needs the separate media resolver service to be configured.",
-    RESOLVER_AUTH_FAILED: "The media resolver credentials are invalid.",
+    UNSUPPORTED_URL: "Use a public TikTok post link.",
+    UNSUPPORTED_PLATFORM: "Vidrop only supports TikTok links.",
     API_NOT_CONFIGURED: "The video resolver is not available right now.",
     NETWORK_ERROR: "Check your connection and try again.",
   };
@@ -59,7 +57,7 @@ export function Downloader() {
   async function processMedia() {
     const parsed = validateMediaUrl(url);
     if (!parsed.success) {
-      setMessage(parsed.error.issues[0]?.message ?? "Enter a valid TikTok or Instagram URL.");
+      setMessage(parsed.error.issues[0]?.message ?? "Enter a valid TikTok URL.");
       setStatus("idle");
       return;
     }
@@ -157,10 +155,10 @@ export function Downloader() {
       >
         <div className="eyebrow"><Sparkles size={14} /> Clean media. Zero clutter.</div>
         <h1>Drop the link.<br /><span>Keep the moment.</span></h1>
-        <p className="hero-copy">Download public TikTok and Instagram videos or photos—fast, simple, and without an account.</p>
+        <p className="hero-copy">Download public TikTok videos, photos, and slideshows—fast, simple, and without an account.</p>
 
         <form className="download-form" onSubmit={(event) => { event.preventDefault(); void processMedia(); }} noValidate>
-          <label className="sr-only" htmlFor="media-url">TikTok or Instagram media URL</label>
+          <label className="sr-only" htmlFor="media-url">TikTok post URL</label>
           <div className={`url-field ${validation?.success ? "valid" : ""} ${url && validation && !validation.success ? "invalid" : ""}`}>
             <Link2 size={20} aria-hidden="true" />
             <input
@@ -169,7 +167,7 @@ export function Downloader() {
               type="url"
               value={url}
               onChange={(event) => { setUrl(event.target.value); setMessage(""); }}
-              placeholder="Paste a TikTok or Instagram link"
+              placeholder="Paste a TikTok link"
               autoComplete="url"
               disabled={status === "loading"}
               aria-invalid={Boolean(url && validation && !validation.success)}
