@@ -65,9 +65,6 @@ h1, h2, h3 { font-family: "Manrope", sans-serif; }
 .primary-button:active:not(:disabled) { transform: scale(.98); }
 .primary-button:disabled { cursor: not-allowed; opacity: .4; box-shadow: none; }
 .download-form > .primary-button { min-width: 176px; }
-.demo-button { display: block; margin: 13px auto 0; border: 0; padding: 5px; background: transparent; color: #888981; font-size: 13px; cursor: pointer; }
-.demo-button span { color: #33342f; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
-.demo-button:disabled { opacity: .45; }
 .trust-row { margin-top: 32px; display: flex; justify-content: center; gap: 25px; color: #6e6f68; font-size: 13px; }
 .trust-row span { display: inline-flex; align-items: center; gap: 6px; }
 .trust-row svg { color: #5e8524; }
@@ -77,10 +74,10 @@ h1, h2, h3 { font-family: "Manrope", sans-serif; }
 .result-card { position: relative; z-index: 2; width: min(940px, 100%); margin: -46px auto 114px; padding: 12px; display: grid; grid-template-columns: minmax(250px, 340px) 1fr; gap: 0; border: 1px solid #dddeda; border-radius: 24px; background: rgba(255,255,255,.88); box-shadow: 0 24px 70px rgba(35,35,28,.09); overflow: hidden; }
 .video-preview { position: relative; min-height: 480px; border-radius: 16px; overflow: hidden; background: #26271e; }
 .video-preview img { width: 100%; height: 100%; object-fit: cover; }
-.demo-art { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #c6dce3 0%, #ffd49f 46%, #d68364 47%, #2f3433 100%); }
-.demo-art::before, .demo-art::after { content: ""; position: absolute; border-radius: 70% 70% 0 0; background: #334a43; filter: blur(.5px); }
-.demo-art::before { width: 110%; height: 38%; left: -48%; bottom: 30%; transform: rotate(11deg); }
-.demo-art::after { width: 110%; height: 32%; right: -56%; bottom: 36%; transform: rotate(-13deg); background: #4b5d4b; }
+.preview-art { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #c6dce3 0%, #ffd49f 46%, #d68364 47%, #2f3433 100%); }
+.preview-art::before, .preview-art::after { content: ""; position: absolute; border-radius: 70% 70% 0 0; background: #334a43; filter: blur(.5px); }
+.preview-art::before { width: 110%; height: 38%; left: -48%; bottom: 30%; transform: rotate(11deg); }
+.preview-art::after { width: 110%; height: 32%; right: -56%; bottom: 36%; transform: rotate(-13deg); background: #4b5d4b; }
 .sun { position: absolute; width: 72px; height: 72px; left: 50%; top: 32%; transform: translate(-50%, -50%); border-radius: 50%; background: #fff1af; box-shadow: 0 0 45px rgba(255,239,156,.75); }
 .horizon { position: absolute; left: 0; right: 0; bottom: 0; height: 39%; background: linear-gradient(125deg, #252929, #46433b); clip-path: polygon(28% 0, 72% 0, 100% 100%, 0 100%); }
 .street-line { position: absolute; bottom: 0; width: 4px; height: 30%; background: #ecd9a0; transform-origin: bottom; }

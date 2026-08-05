@@ -27,7 +27,7 @@ export function ResultCard({ data, notice, onDownload, onReset }: Props) {
   return (
     <motion.section id="result" className="result-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
       <div className="video-preview">
-        {data.thumbnail ? <img src={data.thumbnail} alt={`Preview of ${data.title}`} /> : <div className="demo-art" aria-label="Video preview placeholder"><span className="sun" /><span className="horizon" /><span className="street-line one" /><span className="street-line two" /></div>}
+        {data.thumbnail ? <img src={data.thumbnail} alt={`Preview of ${data.title}`} /> : <div className="preview-art" aria-label="Video preview placeholder"><span className="sun" /><span className="horizon" /><span className="street-line one" /><span className="street-line two" /></div>}
         <button type="button" className="play-button" aria-label="Play video preview"><Play size={20} fill="currentColor" /></button>
         <span className="duration"><Clock3 size={13} /> 0:{String(data.duration).padStart(2, "0")}</span>
         <span className="preview-label">Preview</span>

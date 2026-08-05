@@ -11,11 +11,9 @@ import {
   XCircle,
 } from "lucide-react";
 import { validateTikTokUrl } from "../lib/validation";
-import { getDemoVideo, resolveVideo } from "../services/resolver";
+import { resolveVideo } from "../services/resolver";
 import type { DownloadStatus, MediaFormat, VideoData } from "../types/video";
 import { ResultCard } from "./ResultCard";
-
-const demoUrl = "https://www.tiktok.com/@madebyvidrop/video/7462183901234567890";
 
 function getErrorMessage(code: string) {
   const messages: Record<string, string> = {
@@ -26,7 +24,7 @@ function getErrorMessage(code: string) {
     REQUEST_TIMEOUT: "The resolver took too long. Please try again.",
     MEDIA_NOT_AVAILABLE: "No downloadable video source is available for this post.",
     UNSUPPORTED_URL: "Only public TikTok video links are supported.",
-    API_NOT_CONFIGURED: "The video resolver is not connected yet. You can still explore the interface with the demo.",
+    API_NOT_CONFIGURED: "The video resolver is not available right now.",
     NETWORK_ERROR: "Check your connection and try again.",
   };
   return messages[code] ?? "We couldn't process this video right now.";
@@ -37,7 +35,6 @@ export function Downloader() {
   const [status, setStatus] = useState<DownloadStatus>("idle");
   const [message, setMessage] = useState("");
   const [data, setData] = useState<VideoData | null>(null);
-  const [isDemo, setIsDemo] = useState(false);
   const [pasted, setPasted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const validation = url ? validateTikTokUrl(url) : null;
@@ -54,13 +51,8 @@ export function Downloader() {
     }
   }
 
-  async function processVideo(useDemo = false) {
-    const nextUrl = useDemo ? demoUrl : url;
-    if (useDemo) {
-      setUrl(nextUrl);
-      setIsDemo(true);
-    }
-    const parsed = validateTikTokUrl(nextUrl);
+  async function processVideo() {
+    const parsed = validateTikTokUrl(url);
     if (!parsed.success) {
       setMessage(parsed.error.issues[0]?.message ?? "Enter a valid TikTok URL.");
       setStatus("idle");
@@ -71,7 +63,7 @@ export function Downloader() {
     setData(null);
     setStatus("loading");
     try {
-      const video = useDemo || isDemo ? await getDemoVideo() : await resolveVideo(parsed.data);
+      const video = await resolveVideo(parsed.data);
       setData(video);
       setStatus("success");
       window.setTimeout(() => document.getElementById("result")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
@@ -86,17 +78,11 @@ export function Downloader() {
     setUrl("");
     setData(null);
     setMessage("");
-    setIsDemo(false);
     setStatus("idle");
     window.setTimeout(() => inputRef.current?.focus(), 50);
   }
 
   async function startDownload(format: MediaFormat) {
-    if (format.url.startsWith("#")) {
-      setMessage("Demo complete — connect /api/resolve to enable real downloads.");
-      return;
-    }
-
     setMessage("");
     try {
       const response = await fetch(format.url);
@@ -138,7 +124,7 @@ export function Downloader() {
               id="tiktok-url"
               type="url"
               value={url}
-              onChange={(event) => { setUrl(event.target.value); setIsDemo(false); setMessage(""); }}
+              onChange={(event) => { setUrl(event.target.value); setMessage(""); }}
               placeholder="Paste a TikTok video URL"
               autoComplete="url"
               disabled={status === "loading"}
@@ -156,9 +142,6 @@ export function Downloader() {
           </div>
           <button className="primary-button" type="submit" disabled={!validation?.success || status === "loading"}>
             {status === "loading" ? <><LoaderCircle className="spin" size={19} /> Finding your video...</> : <><Download size={19} /> Get video</>}
-          </button>
-          <button className="demo-button" type="button" onClick={() => void processVideo(true)} disabled={status === "loading"}>
-            No API yet? <span>Try the interactive demo</span>
           </button>
         </form>
 
