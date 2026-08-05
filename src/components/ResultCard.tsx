@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import { motion } from "motion/react";
-import { Check, Clock3, Download, Music2, Play, RotateCcw, ShieldCheck, Video } from "lucide-react";
+import { Check, Clock3, Download, LoaderCircle, Music2, Play, RotateCcw, ShieldCheck, Video } from "lucide-react";
 import type { MediaFormat, VideoData } from "../types/video";
 
 type Props = {
   data: VideoData;
   notice: string;
-  onDownload: (format: MediaFormat) => void;
+  onDownload: (format: MediaFormat) => Promise<void>;
   onReset: () => void;
 };
 
@@ -14,6 +14,7 @@ export function ResultCard({ data, notice, onDownload, onReset }: Props) {
   const videoFormats = useMemo(() => data.formats.filter((item) => item.type === "video"), [data.formats]);
   const [selectedId, setSelectedId] = useState(videoFormats[0]?.id ?? "");
   const [mode, setMode] = useState<"video" | "audio">("video");
+  const [isDownloading, setIsDownloading] = useState(false);
   const selected = videoFormats.find((item) => item.id === selectedId) ?? videoFormats[0];
   const downloadItem: MediaFormat | undefined = mode === "video" ? selected : data.audio?.url ? {
     id: "audio",
@@ -60,8 +61,19 @@ export function ResultCard({ data, notice, onDownload, onReset }: Props) {
           </div>
         </fieldset>
 
-        <button className="primary-button download-button" type="button" disabled={!downloadItem} onClick={() => downloadItem && onDownload(downloadItem)}>
-          <Download size={19} /> Download {mode === "video" ? "video" : "audio"}
+        <button
+          className="primary-button download-button"
+          type="button"
+          disabled={!downloadItem || isDownloading}
+          onClick={async () => {
+            if (!downloadItem) return;
+            setIsDownloading(true);
+            await onDownload(downloadItem);
+            setIsDownloading(false);
+          }}
+        >
+          {isDownloading ? <LoaderCircle className="spin" size={19} /> : <Download size={19} />}
+          {isDownloading ? "Preparing download..." : `Download ${mode === "video" ? "video" : "audio"}`}
         </button>
         {notice && <p className="result-notice" role="status">{notice}</p>}
         <button className="reset-button" type="button" onClick={onReset}><RotateCcw size={15} /> Download another video</button>

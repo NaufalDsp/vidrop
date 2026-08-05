@@ -23,6 +23,9 @@ function getErrorMessage(code: string) {
     VIDEO_REMOVED: "This video is no longer available.",
     VIDEO_NOT_FOUND: "We couldn't find a video at that link.",
     RATE_LIMITED: "Too many requests. Please try again shortly.",
+    REQUEST_TIMEOUT: "The resolver took too long. Please try again.",
+    MEDIA_NOT_AVAILABLE: "No downloadable video source is available for this post.",
+    UNSUPPORTED_URL: "Only public TikTok video links are supported.",
     API_NOT_CONFIGURED: "The video resolver is not connected yet. You can still explore the interface with the demo.",
     NETWORK_ERROR: "Check your connection and try again.",
   };
@@ -88,12 +91,30 @@ export function Downloader() {
     window.setTimeout(() => inputRef.current?.focus(), 50);
   }
 
-  function startDownload(format: MediaFormat) {
+  async function startDownload(format: MediaFormat) {
     if (format.url.startsWith("#")) {
       setMessage("Demo complete — connect /api/resolve to enable real downloads.");
       return;
     }
-    window.open(format.url, "_blank", "noopener,noreferrer");
+
+    setMessage("");
+    try {
+      const response = await fetch(format.url);
+      if (!response.ok) throw new Error("MEDIA_DOWNLOAD_FAILED");
+
+      const objectUrl = URL.createObjectURL(await response.blob());
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = `vidrop-${data?.id ?? "tiktok"}.${format.format}`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1_000);
+      setMessage("Your download has started.");
+    } catch {
+      setMessage("The direct download was blocked. The media has been opened in a new tab instead.");
+      window.open(format.url, "_blank", "noopener,noreferrer");
+    }
   }
 
   return (
