@@ -1,40 +1,8 @@
+import type { ResolvedMedia, ResolvedMediaFormat, ResolvedMediaItem } from "./media-types.js";
+import { ResolverError } from "./resolver-error.js";
+
 const TIKWM_API_URL = "https://www.tikwm.com/api/";
 const REQUEST_TIMEOUT_MS = 15_000;
-
-const allowedTikTokHosts = new Set([
-  "tiktok.com",
-  "www.tiktok.com",
-  "m.tiktok.com",
-  "vm.tiktok.com",
-  "vt.tiktok.com",
-]);
-
-export type ResolvedMediaFormat = {
-  id: string;
-  type: "video";
-  format: "mp4";
-  quality: string;
-  watermark: false;
-  url: string;
-};
-
-export type ResolvedImage = {
-  id: string;
-  index: number;
-  url: string;
-};
-
-export type ResolvedVideo = {
-  id: string;
-  mediaType: "video" | "photo" | "slideshow";
-  title: string;
-  author: { username: string; displayName?: string };
-  thumbnail?: string;
-  duration: number;
-  formats: ResolvedMediaFormat[];
-  images: ResolvedImage[];
-  audio?: { available: boolean; url?: string };
-};
 
 type TikwmAuthor = {
   unique_id?: unknown;
@@ -60,17 +28,6 @@ export type TikwmPayload = {
   } | null;
 };
 
-export class ResolverError extends Error {
-  constructor(
-    public readonly code: string,
-    message: string,
-    public readonly status = 502,
-  ) {
-    super(message);
-    this.name = "ResolverError";
-  }
-}
-
 function asNonEmptyString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
@@ -87,27 +44,7 @@ function asSafeMediaUrl(value: unknown): string | undefined {
   }
 }
 
-export function parseTikTokUrl(value: unknown): string {
-  if (typeof value !== "string" || value.length > 2_048) {
-    throw new ResolverError("INVALID_URL", "Enter a valid TikTok URL.", 400);
-  }
-
-  let parsed: URL;
-  try {
-    parsed = new URL(value.trim());
-  } catch {
-    throw new ResolverError("INVALID_URL", "Enter a valid TikTok URL.", 400);
-  }
-
-  if (parsed.protocol !== "https:" || !allowedTikTokHosts.has(parsed.hostname.toLowerCase())) {
-    throw new ResolverError("UNSUPPORTED_URL", "Only public TikTok links are supported.", 400);
-  }
-
-  parsed.hash = "";
-  return parsed.toString();
-}
-
-export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedVideo {
+export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedMedia {
   if (payload.code !== 0 || !payload.data) {
     const providerMessage = asNonEmptyString(payload.msg)?.toLowerCase() ?? "";
     if (providerMessage.includes("private")) {
@@ -125,7 +62,7 @@ export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedVideo {
       .map(asSafeMediaUrl)
       .filter((url): url is string => Boolean(url))
       .slice(0, 35)
-      .map((url, index) => ({ id: `image-${index + 1}`, index: index + 1, url }))
+      .map((url, index): ResolvedMediaItem => ({ id: `image-${index + 1}`, index: index + 1, type: "photo", url }))
     : [];
   const hasPositiveSize = (value: unknown) => typeof value !== "number" || value > 0;
   const standardUrl = hasPositiveSize(payload.data.size) ? asSafeMediaUrl(payload.data.play) : undefined;
@@ -150,6 +87,7 @@ export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedVideo {
 
   return {
     id,
+    platform: "tiktok",
     mediaType: images.length === 1 ? "photo" : images.length > 1 ? "slideshow" : "video",
     title: asNonEmptyString(payload.data.title) ?? (images.length === 1 ? "TikTok photo" : images.length > 1 ? "TikTok slideshow" : "TikTok video"),
     author: {
@@ -159,12 +97,13 @@ export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedVideo {
     thumbnail: asSafeMediaUrl(payload.data.cover) ?? asSafeMediaUrl(payload.data.origin_cover),
     duration,
     formats: images.length > 0 ? [] : formats,
+    items: images,
     images,
     audio: { available: Boolean(audioUrl), ...(audioUrl ? { url: audioUrl } : {}) },
   };
 }
 
-export async function resolveTikTokVideo(url: string): Promise<ResolvedVideo> {
+export async function resolveTikTokMedia(url: string): Promise<ResolvedMedia> {
   const body = new URLSearchParams({ url, hd: "1" });
 
   let response: Response;

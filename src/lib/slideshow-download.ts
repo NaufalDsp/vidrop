@@ -1,13 +1,14 @@
 import { zipSync } from "fflate";
-import type { SlideshowImage } from "../types/video";
+import type { MediaItem } from "../types/media";
 
 function extensionFor(blob: Blob) {
+  if (blob.type.includes("video") || blob.type.includes("mp4")) return "mp4";
   if (blob.type.includes("png")) return "png";
   if (blob.type.includes("webp")) return "webp";
   return "jpg";
 }
 
-async function fetchImage(image: SlideshowImage, postId: string) {
+async function fetchImage(image: MediaItem, postId: string) {
   const response = await fetch(image.url);
   if (!response.ok) throw new Error(`IMAGE_${image.index}_FAILED`);
   const blob = await response.blob();
@@ -18,7 +19,7 @@ async function fetchImage(image: SlideshowImage, postId: string) {
 }
 
 export async function createSlideshowZip(
-  images: SlideshowImage[],
+  images: MediaItem[],
   postId: string,
   onProgress: (completed: number, total: number) => void,
 ) {

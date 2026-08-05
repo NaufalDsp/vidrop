@@ -1,10 +1,10 @@
-import type { VideoData } from "../types/video";
+import type { ResolvedMedia } from "../types/media";
 
 type ResolverResponse =
-  | { success: true; data: VideoData }
+  | { success: true; data: ResolvedMedia }
   | { success: false; error: { code: string; message: string } };
 
-export async function resolveVideo(url: string, signal?: AbortSignal): Promise<VideoData> {
+export async function resolveMedia(url: string, signal?: AbortSignal): Promise<ResolvedMedia> {
   const response = await fetch("/api/resolve", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
