@@ -18,13 +18,21 @@ export type ResolvedMediaFormat = {
   url: string;
 };
 
+export type ResolvedImage = {
+  id: string;
+  index: number;
+  url: string;
+};
+
 export type ResolvedVideo = {
   id: string;
+  mediaType: "video" | "slideshow";
   title: string;
   author: { username: string; displayName?: string };
   thumbnail?: string;
   duration: number;
   formats: ResolvedMediaFormat[];
+  images: ResolvedImage[];
   audio?: { available: boolean; url?: string };
 };
 
@@ -44,6 +52,9 @@ export type TikwmPayload = {
     origin_cover?: unknown;
     play?: unknown;
     hdplay?: unknown;
+    size?: unknown;
+    hd_size?: unknown;
+    images?: unknown;
     music?: unknown;
     author?: TikwmAuthor;
   } | null;
@@ -109,11 +120,19 @@ export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedVideo {
   }
 
   const id = asNonEmptyString(payload.data.id);
-  const standardUrl = asSafeMediaUrl(payload.data.play);
-  const hdUrl = asSafeMediaUrl(payload.data.hdplay);
+  const images = Array.isArray(payload.data.images)
+    ? payload.data.images
+      .map(asSafeMediaUrl)
+      .filter((url): url is string => Boolean(url))
+      .slice(0, 35)
+      .map((url, index) => ({ id: `image-${index + 1}`, index: index + 1, url }))
+    : [];
+  const hasPositiveSize = (value: unknown) => typeof value !== "number" || value > 0;
+  const standardUrl = hasPositiveSize(payload.data.size) ? asSafeMediaUrl(payload.data.play) : undefined;
+  const hdUrl = hasPositiveSize(payload.data.hd_size) ? asSafeMediaUrl(payload.data.hdplay) : undefined;
 
-  if (!id || (!standardUrl && !hdUrl)) {
-    throw new ResolverError("MEDIA_NOT_AVAILABLE", "No downloadable video source was returned.", 404);
+  if (!id || (!standardUrl && !hdUrl && images.length === 0)) {
+    throw new ResolverError("MEDIA_NOT_AVAILABLE", "No downloadable media source was returned.", 404);
   }
 
   const formats: ResolvedMediaFormat[] = [];
@@ -131,14 +150,16 @@ export function normalizeTikwmPayload(payload: TikwmPayload): ResolvedVideo {
 
   return {
     id,
-    title: asNonEmptyString(payload.data.title) ?? "TikTok video",
+    mediaType: images.length > 0 ? "slideshow" : "video",
+    title: asNonEmptyString(payload.data.title) ?? (images.length > 0 ? "TikTok slideshow" : "TikTok video"),
     author: {
       username: asNonEmptyString(payload.data.author?.unique_id) ?? "tiktok",
       displayName: asNonEmptyString(payload.data.author?.nickname),
     },
     thumbnail: asSafeMediaUrl(payload.data.cover) ?? asSafeMediaUrl(payload.data.origin_cover),
     duration,
-    formats,
+    formats: images.length > 0 ? [] : formats,
+    images,
     audio: { available: Boolean(audioUrl), ...(audioUrl ? { url: audioUrl } : {}) },
   };
 }
