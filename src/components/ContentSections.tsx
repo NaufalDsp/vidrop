@@ -12,22 +12,22 @@ import {
 } from "lucide-react";
 
 const steps = [
-  { icon: Link2, number: "01", title: "Paste the link", copy: "Copy the TikTok video URL and drop it into Vidrop." },
-  { icon: SlidersHorizontal, number: "02", title: "Choose quality", copy: "Pick from the resolutions that are actually available." },
-  { icon: Download, number: "03", title: "Download", copy: "Save your video or audio directly to your device." },
+  { icon: Link2, number: "01", title: "Paste the link", copy: "Copy a public TikTok or Instagram link and drop it into Vidrop." },
+  { icon: SlidersHorizontal, number: "02", title: "Choose media", copy: "Pick an available video quality, photo, or carousel item." },
+  { icon: Download, number: "03", title: "Download", copy: "Save video, audio, photos, or a complete carousel to your device." },
 ];
 
 const features = [
-  { icon: ShieldCheck, title: "No watermark", copy: "We prioritize available clean video sources." },
+  { icon: ShieldCheck, title: "Clean sources", copy: "We prioritize original media sources without added branding." },
   { icon: Layers3, title: "Real quality choices", copy: "Only resolutions returned by the source are shown." },
   { icon: Smartphone, title: "Made for every screen", copy: "A comfortable experience from 320px to desktop." },
   { icon: UserRoundX, title: "No account needed", copy: "No sign-up, no history, and no unnecessary steps." },
 ];
 
 const faqs = [
-  ["How do I download a TikTok video?", "Copy the TikTok video link, paste it into Vidrop, select the available quality, then choose Download."],
-  ["Can I download without a watermark?", "Vidrop prioritizes no-watermark sources whenever the resolver makes one available."],
-  ["Can I download TikTok videos as MP3?", "Yes, when an audio source is available. Select Audio MP3 in the result panel."],
+  ["Which platforms does Vidrop support?", "Vidrop supports public TikTok posts and public Instagram posts, Reels, photos, and carousels."],
+  ["Can I download without a watermark?", "Vidrop prioritizes clean or original sources whenever one is available."],
+  ["Can I download audio separately?", "Yes, when the platform returns a separate audio source. Select Audio MP3 in the result panel."],
   ["Why isn't a certain resolution available?", "Vidrop only displays qualities returned by the source, so it never promises a resolution that does not exist."],
   ["Do I need to create an account?", "No. Vidrop is designed to work without registration or login."],
   ["Are my download links stored?", "No. Vidrop does not permanently store the links you submit."],
@@ -79,7 +79,7 @@ export function Footer() {
       <div className="container footer-top">
         <div className="footer-intro">
           <a className="footer-wordmark" href="#top">Vidrop</a>
-          <p>Save the videos worth keeping.</p>
+          <p>Save the media worth keeping.</p>
         </div>
         <nav className="footer-links" aria-label="Footer navigation">
           <a href="#how-it-works">How it works</a>

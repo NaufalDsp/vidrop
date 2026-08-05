@@ -1,25 +1,29 @@
 import { z } from "zod";
 
-const allowedHosts = new Set([
+const tiktokHosts = new Set([
   "tiktok.com",
   "www.tiktok.com",
   "m.tiktok.com",
   "vm.tiktok.com",
   "vt.tiktok.com",
 ]);
+const instagramHosts = new Set(["instagram.com", "www.instagram.com", "m.instagram.com"]);
 
-export const tiktokUrlSchema = z
+export const mediaUrlSchema = z
   .string()
   .trim()
-  .url("Enter a complete TikTok URL.")
+  .url("Enter a complete TikTok or Instagram URL.")
   .refine((value) => {
     try {
-      return allowedHosts.has(new URL(value).hostname.toLowerCase());
+      const parsed = new URL(value);
+      const host = parsed.hostname.toLowerCase();
+      if (tiktokHosts.has(host)) return true;
+      return instagramHosts.has(host) && /^\/(?:p|reel|reels|tv)\/[^/]+/i.test(parsed.pathname);
     } catch {
       return false;
     }
-  }, "That doesn't look like a TikTok video link.");
+  }, "Use a public TikTok post or Instagram post/Reel link.");
 
-export function validateTikTokUrl(value: string) {
-  return tiktokUrlSchema.safeParse(value);
+export function validateMediaUrl(value: string) {
+  return mediaUrlSchema.safeParse(value);
 }

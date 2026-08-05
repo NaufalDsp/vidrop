@@ -2,15 +2,15 @@ import { useMemo, useState } from "react";
 import { motion } from "motion/react";
 import {
   Check, ChevronLeft, ChevronRight, Clock3, Download, Images, LoaderCircle,
-  Music2, Play, RotateCcw, ShieldCheck, Video,
+  Music2, RotateCcw, ShieldCheck, Video,
 } from "lucide-react";
-import type { MediaFormat, SlideshowImage, VideoData } from "../types/video";
+import type { MediaFormat, MediaItem, ResolvedMedia } from "../types/media";
 
 type Props = {
-  data: VideoData;
+  data: ResolvedMedia;
   notice: string;
   onDownload: (format: MediaFormat) => Promise<void>;
-  onImageDownload: (image: SlideshowImage) => Promise<void>;
+  onImageDownload: (image: MediaItem) => Promise<void>;
   onSlideshowDownload: (onProgress: (completed: number, total: number) => void) => Promise<void>;
   onReset: () => void;
 };
@@ -19,31 +19,33 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
   const videoFormats = useMemo(() => data.formats.filter((item) => item.type === "video"), [data.formats]);
   const isPhotoPost = data.mediaType === "photo" && data.images.length === 1;
   const isSlideshow = data.mediaType === "slideshow" && data.images.length > 1;
-  const isImagePost = isPhotoPost || isSlideshow;
+  const isCarousel = data.mediaType === "carousel" && data.items.length > 1;
+  const isCollection = isSlideshow || isCarousel;
+  const isImagePost = isPhotoPost || isCollection;
   const [selectedId, setSelectedId] = useState(videoFormats[0]?.id ?? "");
   const [mode, setMode] = useState<"video" | "audio">("video");
   const [slideIndex, setSlideIndex] = useState(0);
   const [downloadMode, setDownloadMode] = useState<"idle" | "single" | "all">("idle");
   const [progress, setProgress] = useState({ completed: 0, total: 0 });
   const selected = videoFormats.find((item) => item.id === selectedId) ?? videoFormats[0];
-  const currentImage = data.images[slideIndex];
+  const currentItem = data.items[slideIndex];
   const downloadItem: MediaFormat | undefined = mode === "video" ? selected : data.audio?.url ? {
     id: "audio", type: "audio", format: "mp3", quality: "Audio", url: data.audio.url,
   } : undefined;
 
   function moveSlide(direction: number) {
-    setSlideIndex((current) => (current + direction + data.images.length) % data.images.length);
+    setSlideIndex((current) => (current + direction + data.items.length) % data.items.length);
   }
 
   async function runSingleImageDownload() {
-    if (!currentImage) return;
+    if (!currentItem) return;
     setDownloadMode("single");
-    try { await onImageDownload(currentImage); } finally { setDownloadMode("idle"); }
+    try { await onImageDownload(currentItem); } finally { setDownloadMode("idle"); }
   }
 
   async function runSlideshowDownload() {
     setDownloadMode("all");
-    setProgress({ completed: 0, total: data.images.length });
+    setProgress({ completed: 0, total: data.items.length });
     try { await onSlideshowDownload((completed, total) => setProgress({ completed, total })); }
     catch { /* The parent displays the actionable error message. */ }
     finally { setDownloadMode("idle"); }
@@ -54,14 +56,13 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
       <div className={`video-preview ${isImagePost ? "slideshow-preview" : ""}`}>
         {isImagePost ? (
           <>
-            <img src={currentImage.url} alt={isPhotoPost ? `Photo from ${data.title}` : `Slide ${currentImage.index} of ${data.images.length} from ${data.title}`} />
-            {isSlideshow && <><button type="button" className="slide-control previous" onClick={() => moveSlide(-1)} aria-label="Previous image"><ChevronLeft size={22} /></button><button type="button" className="slide-control next" onClick={() => moveSlide(1)} aria-label="Next image"><ChevronRight size={22} /></button><span className="slide-counter"><Images size={13} /> {currentImage.index} / {data.images.length}</span></>}
-            <span className="preview-label">{isPhotoPost ? "Photo post" : "Photo slideshow"}</span>
+            {currentItem.type === "video" ? <video src={currentItem.url} poster={currentItem.thumbnail} controls playsInline /> : <img src={currentItem.url} alt={isPhotoPost ? `Photo from ${data.title}` : `Item ${currentItem.index} of ${data.items.length} from ${data.title}`} />}
+            {isCollection && <><button type="button" className="slide-control previous" onClick={() => moveSlide(-1)} aria-label="Previous item"><ChevronLeft size={22} /></button><button type="button" className="slide-control next" onClick={() => moveSlide(1)} aria-label="Next item"><ChevronRight size={22} /></button><span className="slide-counter"><Images size={13} /> {currentItem.index} / {data.items.length}</span></>}
+            <span className="preview-label">{isPhotoPost ? "Photo post" : isCarousel ? "Instagram carousel" : "Photo slideshow"}</span>
           </>
         ) : (
           <>
-            {data.thumbnail ? <img src={data.thumbnail} alt={`Preview of ${data.title}`} /> : <div className="preview-art" aria-label="Video preview placeholder"><span className="sun" /><span className="horizon" /><span className="street-line one" /><span className="street-line two" /></div>}
-            <button type="button" className="play-button" aria-label="Play video preview"><Play size={20} fill="currentColor" /></button>
+            {selected?.url ? <video src={selected.url} poster={data.thumbnail} controls playsInline /> : <div className="preview-art" aria-label="Video preview placeholder"><span className="sun" /><span className="horizon" /><span className="street-line one" /><span className="street-line two" /></div>}
             <span className="duration"><Clock3 size={13} /> 0:{String(data.duration).padStart(2, "0")}</span>
             <span className="preview-label">Preview</span>
           </>
@@ -70,8 +71,8 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
 
       <div className="result-content">
         <div className="creator-row">
-          <div><span className="display-name">{data.author.displayName}</span><span className="username">@{data.author.username}</span></div>
-          <span className="clean-badge"><ShieldCheck size={14} /> {isPhotoPost ? "1 photo" : isSlideshow ? `${data.images.length} photos` : "No watermark"}</span>
+          <div><span className="platform-name">{data.platform === "instagram" ? "Instagram" : "TikTok"}</span><span className="display-name">{data.author.displayName}</span><span className="username">@{data.author.username}</span></div>
+          <span className="clean-badge"><ShieldCheck size={14} /> {isPhotoPost ? "1 photo" : isCollection ? `${data.items.length} items` : "No watermark"}</span>
         </div>
         <p className="caption">{data.title}</p>
 
@@ -79,17 +80,17 @@ export function ResultCard({ data, notice, onDownload, onImageDownload, onSlides
           <div className="slideshow-actions">
             <button className="secondary-download-button" type="button" disabled={downloadMode !== "idle"} onClick={() => void runSingleImageDownload()}>
               {downloadMode === "single" ? <LoaderCircle className="spin" size={18} /> : <Download size={18} />}
-              {downloadMode === "single" ? "Preparing image..." : `Download image ${currentImage.index}`}
+              {downloadMode === "single" ? "Preparing media..." : `Download ${currentItem.type === "video" ? "video" : "image"} ${currentItem.index}`}
             </button>
-            {isSlideshow && (
+            {isCollection && (
               <button className="primary-button download-button" type="button" disabled={downloadMode !== "idle"} onClick={() => void runSlideshowDownload()}>
                 {downloadMode === "all" ? <LoaderCircle className="spin" size={19} /> : <Images size={19} />}
-                {downloadMode === "all" ? `Preparing ${progress.completed} of ${progress.total}...` : "Download all images (.zip)"}
+                {downloadMode === "all" ? `Preparing ${progress.completed} of ${progress.total}...` : "Download all media (.zip)"}
               </button>
             )}
             {data.audio?.available && (
               <button className="audio-download-button" type="button" disabled={downloadMode !== "idle"} onClick={() => data.audio?.url && void onDownload({ id: "audio", type: "audio", format: "mp3", quality: "Audio", url: data.audio.url })}>
-                <Music2 size={16} /> Download {isPhotoPost ? "photo" : "slideshow"} audio
+                <Music2 size={16} /> Download post audio
               </button>
             )}
           </div>
