@@ -30,9 +30,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .app-shell { min-height: 100vh; overflow: hidden; background: radial-gradient(circle at 50% 7%, rgba(185,231,105,.13), transparent 28%), #f7f7f4; }
 .navbar { height: 76px; border-bottom: 1px solid rgba(222,222,215,.9); background: rgba(247,247,244,.8); backdrop-filter: blur(16px); position: relative; z-index: 20; }
 .navbar-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; }
-.brand { display: inline-flex; align-items: center; gap: 10px; font: 800 21px/1 "Manrope", sans-serif; letter-spacing: -.7px; }
-.brand-mark { position: relative; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 11px; color: #fff; background: var(--ink); box-shadow: 0 3px 8px rgba(0,0,0,.13); }
-.brand-play { position: absolute; right: 4px; top: 4px; color: var(--lime); }
+.brand { display: inline-flex; align-items: center; }
+.brand-logo { display: block; width: auto; height: 46px; }
 nav { display: flex; align-items: center; gap: 30px; font-size: 14px; font-weight: 600; color: #55564f; }
 nav a { transition: color .2s ease; }
 nav a:hover { color: var(--ink); }
@@ -146,7 +145,7 @@ h1, h2, h3 { font-family: "Manrope", sans-serif; }
 .faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .28s ease; }.faq-answer > p { min-height: 0; overflow: hidden; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }.faq-item.open .faq-answer { grid-template-rows: 1fr; }.faq-item.open .faq-answer > p { padding: 0 36px 22px 3px; }
 
 footer { margin-top: 10px; padding: 60px 0 24px; color: #f4f4ef; background: #1c1c19; }
-.footer-top { display: flex; justify-content: space-between; padding-bottom: 55px; }.footer-top .brand-mark { color: var(--ink); background: var(--lime); }.footer-top > div > p { margin: 16px 0 0; color: #8f9088; font-size: 14px; }
+.footer-top { display: flex; justify-content: space-between; padding-bottom: 55px; }.footer-top .brand { padding: 4px 10px; border-radius: 10px; background: #fff; }.footer-top .brand-logo { height: 40px; }.footer-top > div > p { margin: 16px 0 0; color: #8f9088; font-size: 14px; }
 .footer-links { display: flex; align-items: flex-start; gap: 30px; color: #b9bab2; font-size: 14px; }.footer-links a { display: inline-flex; align-items: center; gap: 6px; }
 .footer-bottom { padding-top: 23px; border-top: 1px solid #33332f; display: flex; justify-content: space-between; gap: 24px; color: #7f8078; font-size: 12px; }
 .footer-bottom p { margin: 0; }
@@ -163,7 +162,7 @@ footer { margin-top: 10px; padding: 60px 0 24px; color: #f4f4ef; background: #1c
 }
 
 @media (max-width: 540px) {
-  .navbar { height: 68px; }.navbar nav { gap: 0; }.github-link { padding: 9px; }.github-link span { display: none; }
+  .navbar { height: 68px; }.navbar .brand-logo { height: 40px; }.navbar nav { gap: 0; }.github-link { padding: 9px; }.github-link span { display: none; }
   .hero { width: 100%; padding: 60px 0 76px; }.hero h1 { max-width: 100%; margin-top: 22px; font-size: clamp(38px,11.2vw,44px); overflow-wrap: anywhere; }.hero-copy { font-size: 15px; line-height: 1.55; }
   .download-form { max-width: 100%; margin-top: 32px; }.url-field { width: 100%; min-width: 0; min-height: 58px; padding-left: 14px; gap: 9px; }.url-field > svg { width: 18px; }.paste-button { width: 44px; min-height: 44px; padding: 0; flex: 0 0 44px; }.paste-button svg { display: block; }.paste-button { font-size: 0; }
   .download-form > .primary-button { width: 100%; }.trust-row { width: 100%; flex-wrap: wrap; gap: 9px 14px; margin-top: 27px; font-size: 12px; }

@@ -1,0 +1,48 @@
+<svg width="1200" height="420" viewBox="0 0 1200 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="viddropGradient" x1="130" y1="70" x2="130" y2="330" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#20D8E8"/>
+      <stop offset="55%" stop-color="#0FB8D0"/>
+      <stop offset="100%" stop-color="#0A7C9E"/>
+    </linearGradient>
+    <linearGradient id="viddropDark" x1="110" y1="220" x2="190" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B6D88"/>
+      <stop offset="100%" stop-color="#084F68"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon -->
+  <g transform="translate(70,35)">
+    <!-- Droplet -->
+    <path d="M130 15C118 15 109 24 98 38C73 70 40 111 27 145C12 185 17 231 41 264C64 295 95 314 130 337C165 314 196 295 219 264C243 231 248 185 233 145C220 111 187 70 162 38C151 24 142 15 130 15Z"
+          fill="url(#viddropGradient)"/>
+
+    <!-- Lower darker facet -->
+    <path d="M28 212C56 236 89 246 130 246C171 246 204 236 232 212C225 240 213 261 193 280C174 298 153 311 130 327C107 311 86 298 67 280C47 261 35 240 28 212Z"
+          fill="url(#viddropDark)"/>
+
+    <!-- Play button -->
+    <path d="M99 105C99 94 111 88 120 94L178 128C187 133 187 146 178 151L120 185C111 191 99 185 99 174V105Z"
+          fill="white"/>
+
+    <!-- Download stem -->
+    <rect x="120" y="190" width="20" height="54" rx="10" fill="white"/>
+
+    <!-- Download arrow -->
+    <path d="M96 234C91 234 89 240 93 244L123 274C127 278 133 278 137 274L167 244C171 240 169 234 164 234H145V221H115V234H96Z"
+          fill="white"/>
+
+    <!-- Subtle highlight -->
+    <path d="M130 28C117 28 105 42 92 58C71 84 49 113 38 139"
+          stroke="rgba(255,255,255,0.25)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g fill="#171717">
+    <text x="390" y="270"
+          font-family="Inter, Geist, Arial, Helvetica, sans-serif"
+          font-size="148"
+          font-weight="600"
+          letter-spacing="-8">VidDrop</text>
+  </g>
+</svg>

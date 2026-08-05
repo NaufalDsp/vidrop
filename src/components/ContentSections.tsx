@@ -71,7 +71,7 @@ export function ContentSections() {
       </section>
 
       <footer>
-        <div className="container footer-top"><div><Brand /><p>Save the videos worth keeping.</p></div><div className="footer-links"><a href="#how-it-works">How it works</a><a href="#faq">FAQ</a><a href="https://github.com" target="_blank" rel="noreferrer"><Code2 size={15} /> GitHub</a></div></div>
+        <div className="container footer-top"><div><Brand /><p>Save the videos worth keeping.</p></div><div className="footer-links"><a href="#how-it-works">How it works</a><a href="#faq">FAQ</a><a href="https://github.com/NaufalDsp/vidrop" target="_blank" rel="noreferrer"><Code2 size={15} /> GitHub</a></div></div>
         <div className="container footer-bottom"><p>Only download content you own or have permission to use.</p><p>Built with React + TypeScript · © 2026 Vidrop</p></div>
       </footer>
     </>
