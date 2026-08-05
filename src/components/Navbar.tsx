@@ -10,7 +10,7 @@ export function Navbar() {
           <a href="#how-it-works">How it works</a>
           <a href="#features">Features</a>
           <a href="#faq">FAQ</a>
-          <a className="github-link" href="https://github.com" target="_blank" rel="noreferrer">
+          <a className="github-link" href="https://github.com/NaufalDsp/vidrop" target="_blank" rel="noreferrer">
             <Code2 size={17} /> <span>GitHub</span>
           </a>
         </nav>
