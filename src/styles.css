@@ -30,8 +30,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .app-shell { min-height: 100vh; overflow: hidden; background: radial-gradient(circle at 50% 7%, rgba(185,231,105,.13), transparent 28%), #f7f7f4; }
 .navbar { height: 76px; border-bottom: 1px solid rgba(222,222,215,.9); background: rgba(247,247,244,.8); backdrop-filter: blur(16px); position: relative; z-index: 20; }
 .navbar-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; }
-.brand { display: inline-flex; align-items: center; }
-.brand-logo { display: block; width: auto; height: 46px; }
+.brand { display: inline-flex; flex: 0 0 auto; align-items: center; }
+.brand-logo { display: block; width: auto; height: 46px; max-width: none; aspect-ratio: 20 / 7; object-fit: contain; }
 .navbar nav { display: flex; align-items: center; gap: 30px; font-size: 14px; font-weight: 600; color: #55564f; }
 .navbar nav a { transition: color .2s ease; }
 .navbar nav a:hover { color: var(--ink); }
