@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
-import { handleResolveRequest } from "./resolve-handler.ts";
+import { handleResolveRequest } from "./resolve-handler.js";
 
 const MAX_BODY_BYTES = 8 * 1024;
 

@@ -1,4 +1,4 @@
-import { parseTikTokUrl, resolveTikTokVideo, ResolverError } from "./tiktok-resolver.ts";
+import { parseTikTokUrl, resolveTikTokVideo, ResolverError } from "./tiktok-resolver.js";
 
 const jsonHeaders = {
   "Cache-Control": "no-store",
